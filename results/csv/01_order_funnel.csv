@@ -1,0 +1,5 @@
+step,stage,orders,pct_of_placed,lost_vs_prev_step
+1,Placed,99092,100.0,
+2,Payment approved,98957,99.86,135
+3,Handed to carrier,97376,98.27,1581
+4,Delivered,96204,97.09,1172

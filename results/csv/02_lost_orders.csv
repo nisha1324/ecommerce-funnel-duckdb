@@ -1,0 +1,9 @@
+order_status,orders,pct_of_lost,orders_with_items,value_brl
+shipped,1097,38.0,1097,175658.0
+unavailable,602,20.8,0,0.0
+canceled,579,20.0,447,102453.0
+processing,299,10.4,299,68981.0
+invoiced,296,10.2,296,65707.0
+delivered,8,0.3,8,1379.0
+created,5,0.2,0,0.0
+approved,2,0.1,2,241.0
