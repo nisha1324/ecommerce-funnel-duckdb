@@ -91,3 +91,31 @@ def test_late_bucket_and_review(con):
     df = run(con, "03_delivery_vs_reviews").set_index("delivery_bucket")
     assert df.loc["1. On time or early", "avg_review"] == 5
     assert df.loc["3. 4-7 days late", "avg_review"] == 1
+
+
+def add_repeat_order(con, order_id, day):
+    """Customer u1 (first order o1 on 2017-03-01) buys again under a new customer_id."""
+    cid = f"c_{order_id}"
+    con.execute("INSERT INTO customers VALUES (?, 'u1', 1000, 'sao paulo', 'SP')", [cid])
+    con.execute(
+        "INSERT INTO orders VALUES (?, ?, 'delivered', ?, ?, ?, ?, ?)",
+        [order_id, cid, f"{day} 10:00:00", f"{day} 11:00:00", f"{day} 12:00:00",
+         f"{day} 13:00:00", f"{day} 14:00:00"],
+    )
+
+
+def test_same_day_order_is_not_a_repeat(con):
+    add_repeat_order(con, "o6", "2017-03-01")
+    df = run(con, "05_repeat_customers")
+    assert df["segment"].tolist() == ["One-time"]
+    assert df["customers"].tolist() == [2]
+
+
+def test_repeat_customer_and_90_day_cohort(con):
+    add_repeat_order(con, "o7", "2017-04-30")  # 60 days after u1's first order
+    df = run(con, "05_repeat_customers").set_index("segment")
+    assert df.loc["Repeat (2+ buying days)", "customers"] == 1
+    assert df.loc["Repeat (2+ buying days)", "median_days_to_2nd_order"] == 60
+    cohorts = run(con, "06_cohort_retention").set_index("cohort")
+    assert cohorts.loc["2017-Q1", "new_customers"] == 2
+    assert cohorts.loc["2017-Q1", "returned_90d"] == 1
