@@ -1,0 +1,3 @@
+segment,customers,pct_customers,revenue,pct_revenue,avg_lifetime_value,median_days_to_2nd_order
+One-time,91099,97.85,14733930.0,95.81,161.74,
+Repeat (2+ buying days),2005,2.15,643880.0,4.19,321.14,74.0

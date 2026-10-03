@@ -65,3 +65,26 @@ Query: [`sql/04_monthly_on_time.sql`](../sql/04_monthly_on_time.sql)
 | 2018-06-01 00:00:00 |            6167 |               6096 |          98.8 |                        8 |
 | 2018-07-01 00:00:00 |            6292 |               6156 |          96.6 |                        7 |
 | 2018-08-01 00:00:00 |            6512 |               6351 |          93.8 |                        7 |
+
+## Q5. How many customers come back, and how fast?
+
+Query: [`sql/05_repeat_customers.sql`](../sql/05_repeat_customers.sql)
+
+| segment                 |   customers |   pct_customers |          revenue |   pct_revenue |   avg_lifetime_value |   median_days_to_2nd_order |
+|:------------------------|------------:|----------------:|-----------------:|--------------:|---------------------:|---------------------------:|
+| One-time                |       91099 |           97.85 |      1.47339e+07 |         95.81 |               161.74 |                        nan |
+| Repeat (2+ buying days) |        2005 |            2.15 | 643880           |          4.19 |               321.14 |                         74 |
+
+## Q6. Quarterly cohorts: what share of new customers buy again within 90 days?
+
+Query: [`sql/06_cohort_retention.sql`](../sql/06_cohort_retention.sql)
+
+| cohort   |   new_customers |   returned_90d |   pct_returned_90d | window_incomplete   |
+|:---------|----------------:|---------------:|-------------------:|:--------------------|
+| 2017-Q1  |            4849 |             53 |               1.09 | False               |
+| 2017-Q2  |            8745 |            128 |               1.46 | False               |
+| 2017-Q3  |           11815 |            180 |               1.52 | False               |
+| 2017-Q4  |           16727 |            203 |               1.21 | False               |
+| 2018-Q1  |           19906 |            233 |               1.17 | False               |
+| 2018-Q2  |           18969 |            234 |               1.23 | True                |
+| 2018-Q3  |           12093 |             74 |               0.61 | True                |

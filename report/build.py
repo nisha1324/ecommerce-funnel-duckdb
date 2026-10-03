@@ -104,6 +104,28 @@ def chart_monthly(df: pd.DataFrame) -> Path:
     return path
 
 
+def chart_cohorts(df: pd.DataFrame) -> Path:
+    fig, ax = plt.subplots(figsize=(8, 3.6))
+    colors = [MUTED if inc else ACCENT for inc in df["window_incomplete"]]
+    ax.bar(df["cohort"], df["pct_returned_90d"], color=colors, width=0.55)
+    for x, (p, n, inc) in enumerate(zip(df["pct_returned_90d"], df["new_customers"],
+                                        df["window_incomplete"])):
+        label = f"{p:.2f}%\n{n:,} new" + ("\n(partial)" if inc else "")
+        ax.text(x, p + 0.03, label, ha="center", color=INK, fontsize=8)
+    ax.set_ylim(0, 2.1)
+    ax.set_ylabel("% buying again within 90 days")
+    ax.set_title("Fewer than 2 in 100 new customers come back within 90 days",
+                 loc="left", color=INK)
+    _style(ax)
+    ax.grid(axis="y", color="#e4e7eb", linewidth=0.8)
+    ax.grid(axis="x", visible=False)
+    fig.tight_layout()
+    path = CHARTS / "04_cohort_retention.png"
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+    return path
+
+
 def write_report(results: dict[str, pd.DataFrame]) -> Path:
     lines = [
         "# Results",
@@ -131,6 +153,7 @@ def main() -> None:
     print(chart_funnel(results["01_order_funnel"]))
     print(chart_reviews(results["03_delivery_vs_reviews"]))
     print(chart_monthly(results["04_monthly_on_time"]))
+    print(chart_cohorts(results["06_cohort_retention"]))
     print(write_report(results))
 
 

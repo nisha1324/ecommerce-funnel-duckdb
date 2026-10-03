@@ -1,0 +1,8 @@
+cohort,new_customers,returned_90d,pct_returned_90d,window_incomplete
+2017-Q1,4849,53,1.09,False
+2017-Q2,8745,128,1.46,False
+2017-Q3,11815,180,1.52,False
+2017-Q4,16727,203,1.21,False
+2018-Q1,19906,233,1.17,False
+2018-Q2,18969,234,1.23,True
+2018-Q3,12093,74,0.61,True
