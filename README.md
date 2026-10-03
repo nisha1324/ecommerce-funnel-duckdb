@@ -1,11 +1,13 @@
 # E-commerce Funnel & Delivery Analysis (DuckDB + SQL)
 
-> 🚧 **In progress.** The funnel and delivery analysis is done. Customer retention and seller/category views are next.
+> 🚧 **In progress.** The funnel, delivery and customer-retention analyses are done. The seller/category view is next.
 
 **Business question:** a Brazilian online marketplace takes ~100k orders. Where do orders drop out between checkout and the customer's door, how much revenue is lost there, and how much does delivery reliability cost in customer satisfaction?
 
 ## Data
 [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce): real, anonymised marketplace orders from 2016 to 2018. It's downloaded from Olist's public GitHub mirror ([`olist/work-at-olist-data`](https://github.com/olist/work-at-olist-data)) by `scripts/download_data.py`. The raw CSVs (~62 MB) aren't committed.
+
+**Licence:** the dataset is © Olist and published under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (see the [Kaggle page](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)). This repo uses it for non-commercial analysis and redistributes only derived aggregates.
 
 | Table | Rows |
 |---|---:|
@@ -67,7 +69,21 @@ Only 6.8% of orders (6,532) arrive late, but an order that is 8+ days late is **
 
 On-time delivery held at about 95–97% through most of 2017. It dropped to **87.6% in November 2017**, the Black Friday month and the busiest month in the data (7,544 orders), and fell further to **85.9% in Feb 2018 and 81.0% in Mar 2018**. It recovered from April 2018, and the median time to deliver fell from 13–14 days to 7–9 days.
 
-**So what (provisional):** the promise date is the lever. Late orders are a small share of volume but produce most of the 1–2★ reviews. Capacity planning before peak periods, and padding promised dates when the network is under strain, would protect ratings. The ~R$176k in "shipped but never delivered" orders points to a carrier-tracking and claims gap worth chasing.
+### 5. Almost every customer buys once
+A customer is a `customer_unique_id` (Olist issues a new `customer_id` for every order). Only delivered orders count (96,211), and a second order on the same day as the first is treated as a split basket, not loyalty.
+
+| Segment | Customers | % customers | Revenue (R$, items + freight) | % revenue | Avg lifetime value (R$) |
+|---|---:|---:|---:|---:|---:|
+| One-time | 91,099 | 97.85 | 14,733,930 | 95.81 | 161.74 |
+| Repeat (2+ buying days) | 2,005 | 2.15 | 643,880 | 4.19 | 321.14 |
+
+Repeat customers are worth about **2× a one-time customer**, but only 2.15% of customers ever come back. The median gap to the second order is 74 days.
+
+![Cohorts](results/charts/04_cohort_retention.png)
+
+Retention didn't improve as the marketplace grew. Among complete cohorts, the share of new customers who bought again within 90 days peaked at **1.52% (2017-Q3)** and slipped to **1.17% (2018-Q1)**, while new-customer volume grew 4×. The 2018-Q2 and Q3 cohorts are partial because their 90-day window runs past the end of the data.
+
+**So what (provisional):** the promise date is the lever. Late orders are a small share of volume but produce most of the 1–2★ reviews. Capacity planning before peak periods, and padding promised dates when the network is under strain, would protect ratings. The ~R$176k in "shipped but never delivered" orders points to a carrier-tracking and claims gap worth chasing. With about 98% of customers buying once, growth relies entirely on acquisition. A second-order programme (for example, a follow-up offer timed around the ~74-day gap after a good delivery) is low-hanging fruit. Even moving 90-day repeat from ~1.2% to 2.5% would roughly double the repeat segment.
 
 ## How to run
 ```bash
@@ -80,6 +96,5 @@ pytest                            # offline tests on a tiny fixture
 ```
 
 ## Next steps
-- Customer retention: repeat-purchase rate and cohorts using `customer_unique_id`.
 - Seller and category view: which sellers and categories drive late deliveries and cancellations.
 - Final recommendations with owners, and limitations.
