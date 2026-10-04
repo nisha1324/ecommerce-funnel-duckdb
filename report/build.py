@@ -126,6 +126,26 @@ def chart_cohorts(df: pd.DataFrame) -> Path:
     return path
 
 
+def chart_states(df: pd.DataFrame) -> Path:
+    df = df.sort_values("late_rate_pct")
+    fig, ax = plt.subplots(figsize=(8, 5))
+    top_share = df["pct_of_late"].nlargest(2).index
+    colors = [ACCENT if i in top_share else MUTED for i in df.index]
+    ax.barh(df["state"], df["late_rate_pct"], color=colors, height=0.6)
+    for y, (r, n, share) in enumerate(zip(df["late_rate_pct"], df["orders"], df["pct_of_late"])):
+        ax.text(r + 0.2, y, f"{r}%  ({n:,} orders, {share}% of late)", va="center",
+                color=INK, fontsize=8)
+    ax.set_xlim(0, df["late_rate_pct"].max() * 1.6)
+    ax.set_xlabel("% delivered late, orders the seller handed off on time")
+    ax.set_title("Carrier-leg lateness by destination state (500+ orders)", loc="left", color=INK)
+    _style(ax)
+    fig.tight_layout()
+    path = CHARTS / "05_late_by_state.png"
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+    return path
+
+
 def write_report(results: dict[str, pd.DataFrame]) -> Path:
     lines = [
         "# Results",
@@ -154,6 +174,7 @@ def main() -> None:
     print(chart_reviews(results["03_delivery_vs_reviews"]))
     print(chart_monthly(results["04_monthly_on_time"]))
     print(chart_cohorts(results["06_cohort_retention"]))
+    print(chart_states(results["09_late_by_state"]))
     print(write_report(results))
 
 

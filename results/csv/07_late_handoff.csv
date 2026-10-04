@@ -1,0 +1,3 @@
+seller_handoff,orders,pct_of_orders,late_orders,late_rate_pct,pct_of_all_late
+Seller handed off on time,87622,91.1,4720.0,5.4,72.3
+Seller missed hand-off deadline,8581,8.9,1811.0,21.1,27.7

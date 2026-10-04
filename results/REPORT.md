@@ -88,3 +88,101 @@ Query: [`sql/06_cohort_retention.sql`](../sql/06_cohort_retention.sql)
 | 2018-Q1  |           19906 |            233 |               1.17 | False               |
 | 2018-Q2  |           18969 |            234 |               1.23 | True                |
 | 2018-Q3  |           12093 |             74 |               0.61 | True                |
+
+## Q7. Who causes late deliveries: the seller or the carrier?
+
+Query: [`sql/07_late_handoff.sql`](../sql/07_late_handoff.sql)
+
+| seller_handoff                  |   orders |   pct_of_orders |   late_orders |   late_rate_pct |   pct_of_all_late |
+|:--------------------------------|---------:|----------------:|--------------:|----------------:|------------------:|
+| Seller handed off on time       |    87622 |            91.1 |          4720 |             5.4 |              72.3 |
+| Seller missed hand-off deadline |     8581 |             8.9 |          1811 |            21.1 |              27.7 |
+
+## Q8. Which product categories drive lateness and cancellations?
+
+Query: [`sql/08_category_drivers.sql`](../sql/08_category_drivers.sql)
+
+| category                                |   orders |   late_orders |   late_rate_pct |   pct_of_all_late |   cancel_rate_pct |
+|:----------------------------------------|---------:|--------------:|----------------:|------------------:|------------------:|
+| bed_bath_table                          |     9306 |           689 |             7.5 |              10.6 |              0.19 |
+| health_beauty                           |     8752 |           648 |             7.6 |               9.9 |              0.39 |
+| sports_leisure                          |     7662 |           495 |             6.6 |               7.6 |              0.59 |
+| furniture_decor                         |     6305 |           446 |             7.2 |               6.8 |              0.38 |
+| computers_accessories                   |     6642 |           416 |             6.4 |               6.4 |              0.53 |
+| watches_gifts                           |     5596 |           406 |             7.4 |               6.2 |              0.36 |
+| housewares                              |     5820 |           307 |             5.4 |               4.7 |              0.64 |
+| telephony                               |     4172 |           291 |             7.2 |               4.5 |              0.34 |
+| auto                                    |     3869 |           278 |             7.3 |               4.3 |              0.59 |
+| toys                                    |     3836 |           241 |             6.4 |               3.7 |              0.73 |
+| baby                                    |     2828 |           226 |             8.2 |               3.5 |              0.53 |
+| garden_tools                            |     3477 |           225 |             6.6 |               3.5 |              0.37 |
+| cool_stuff                              |     3595 |           209 |             5.9 |               3.2 |              0.42 |
+| perfumery                               |     3119 |           202 |             6.6 |               3.1 |              0.38 |
+| electronics                             |     2538 |           192 |             7.7 |               2.9 |              0.24 |
+| stationery                              |     2294 |           148 |             6.6 |               2.3 |              0.52 |
+| fashion_bags_accessories                |     1845 |           101 |             5.6 |               1.6 |              0.27 |
+| office_furniture                        |     1259 |           101 |             8.1 |               1.6 |              0.08 |
+| unknown                                 |     1414 |            97 |             7.1 |               1.5 |              0.99 |
+| pet_shop                                |     1700 |            86 |             5.1 |               1.3 |              0.24 |
+| consoles_games                          |     1048 |            62 |             6.2 |               1   |              0.76 |
+| construction_tools_construction         |      740 |            54 |             7.4 |               0.8 |              0.27 |
+| musical_instruments                     |      624 |            46 |             7.6 |               0.7 |              1.28 |
+| luggage_accessories                     |     1023 |            43 |             4.3 |               0.7 |              0.39 |
+| audio                                   |      344 |            41 |            12   |               0.6 |              0.29 |
+| home_confort                            |      375 |            35 |             9.5 |               0.5 |              0    |
+| home_appliances                         |      764 |            33 |             4.4 |               0.5 |              0.26 |
+| books_general_interest                  |      508 |            32 |             6.5 |               0.5 |              1.38 |
+| food                                    |      443 |            31 |             7.1 |               0.5 |              0.23 |
+| furniture_living_room                   |      417 |            31 |             7.6 |               0.5 |              0.48 |
+| small_appliances                        |      627 |            29 |             4.8 |               0.4 |              1.28 |
+| home_construction                       |      473 |            29 |             6.2 |               0.4 |              0.21 |
+| books_technical                         |      258 |            21 |             8.2 |               0.3 |              0    |
+| industry_commerce_and_business          |      229 |            16 |             7.1 |               0.2 |              0    |
+| drinks                                  |      294 |            15 |             5.3 |               0.2 |              0.34 |
+| construction_tools_lights               |      233 |            15 |             6.5 |               0.2 |              0.43 |
+| home_appliances_2                       |      233 |            14 |             6.2 |               0.2 |              1.29 |
+| art                                     |      198 |            12 |             6.3 |               0.2 |              0.51 |
+| kitchen_dining_laundry_garden_furniture |      245 |            11 |             4.6 |               0.2 |              0.82 |
+| fashion_shoes                           |      237 |            11 |             4.7 |               0.2 |              0.84 |
+| fashion_underwear_beach                 |      121 |            11 |             9.4 |               0.2 |              0    |
+| market_place                            |      267 |            11 |             4.2 |               0.2 |              0.37 |
+| costruction_tools_garden                |      187 |            10 |             5.5 |               0.2 |              1.07 |
+| computers                               |      180 |            10 |             5.7 |               0.2 |              0    |
+| christmas_supplies                      |      128 |            10 |             8   |               0.2 |              0.78 |
+| fixed_telephony                         |      212 |            10 |             4.8 |               0.2 |              1.42 |
+| air_conditioning                        |      247 |            10 |             4.1 |               0.2 |              0.81 |
+| food_drink                              |      224 |             8 |             3.7 |               0.1 |              0.89 |
+| agro_industry_and_commerce              |      182 |             7 |             4   |               0.1 |              0    |
+| furniture_bedroom                       |       94 |             6 |             6.7 |               0.1 |              0    |
+| costruction_tools_tools                 |       97 |             6 |             6.2 |               0.1 |              0    |
+| signaling_and_security                  |      140 |             6 |             4.3 |               0.1 |              0    |
+| fashion_male_clothing                   |      111 |             5 |             4.8 |               0.1 |              0.9  |
+| construction_tools_safety               |      162 |             4 |             2.6 |               0.1 |              1.23 |
+| tablets_printing_image                  |       77 |             4 |             5.2 |               0.1 |              0    |
+| small_appliances_home_oven_and_coffee   |       75 |             4 |             5.6 |               0.1 |              0    |
+| dvds_blu_ray                            |       59 |             4 |             7.1 |               0.1 |              3.39 |
+| cine_photo                              |       65 |             4 |             6.3 |               0.1 |              0    |
+| books_imported                          |       52 |             1 |             2   |               0   |              0    |
+
+## Q9. Where do on-time hand-offs still arrive late? (carrier leg by state)
+
+Query: [`sql/09_late_by_state.sql`](../sql/09_late_by_state.sql)
+
+| state   |   orders |   median_transit_days |   median_promised_days |   late_orders |   late_rate_pct |   pct_of_late |
+|:--------|---------:|----------------------:|-----------------------:|--------------:|----------------:|--------------:|
+| MA      |      648 |                  15.5 |                     31 |            97 |            15   |           2.2 |
+| CE      |     1158 |                  15   |                     32 |           148 |            12.8 |           3.3 |
+| BA      |     2972 |                  14   |                     29 |           334 |            11.2 |           7.5 |
+| RJ      |    11186 |                   8   |                     25 |          1167 |            10.4 |          26.3 |
+| PA      |      862 |                  17   |                     37 |            88 |            10.2 |           2   |
+| ES      |     1797 |                  10   |                     25 |           170 |             9.5 |           3.8 |
+| MS      |      634 |                  11   |                     26 |            54 |             8.5 |           1.2 |
+| PE      |     1445 |                  13   |                     32 |           122 |             8.4 |           2.7 |
+| SC      |     3214 |                   9   |                     26 |           212 |             6.6 |           4.8 |
+| GO      |     1807 |                  11   |                     27 |            98 |             5.4 |           2.2 |
+| MT      |      825 |                  13   |                     32 |            44 |             5.3 |           1   |
+| RS      |     4901 |                  10   |                     28 |           253 |             5.2 |           5.7 |
+| DF      |     1901 |                   8   |                     25 |            77 |             4.1 |           1.7 |
+| MG      |    10306 |                   7   |                     24 |           354 |             3.4 |           8   |
+| PR      |     4459 |                   7   |                     24 |           147 |             3.3 |           3.3 |
+| SP      |    36743 |                   4   |                     19 |          1073 |             2.9 |          24.2 |
