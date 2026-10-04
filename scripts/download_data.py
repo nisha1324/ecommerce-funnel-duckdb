@@ -18,6 +18,8 @@ TABLES = [
     "products",
     "sellers",
 ]
+# English names for product categories (products table uses Portuguese)
+EXTRA = ["product_category_name_translation.csv"]
 RAW = Path(__file__).resolve().parents[1] / "data" / "raw"
 
 
@@ -35,14 +37,14 @@ def fetch(url: str, dest: Path, retries: int = 3) -> None:
 
 def main() -> None:
     RAW.mkdir(parents=True, exist_ok=True)
-    for table in TABLES:
-        dest = RAW / f"olist_{table}_dataset.csv"
+    for name in [f"olist_{t}_dataset.csv" for t in TABLES] + EXTRA:
+        dest = RAW / name
         if dest.exists():
             print(f"skip  {dest.name} (already downloaded)")
             continue
         print(f"fetch {dest.name}")
         fetch(f"{BASE}/{dest.name}", dest)
-    print(f"done: {len(TABLES)} files in {RAW}")
+    print(f"done: {len(TABLES) + len(EXTRA)} files in {RAW}")
 
 
 if __name__ == "__main__":

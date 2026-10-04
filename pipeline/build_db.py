@@ -55,6 +55,14 @@ def build(raw: Path, db: Path) -> duckdb.DuckDBPyConnection:
             f"SELECT * FROM read_csv_auto(?, header = true)",
             [str(csv)],
         )
+    # Optional lookup: English category names (falls back to Portuguese if absent)
+    translation = raw / "product_category_name_translation.csv"
+    if translation.exists():
+        con.execute("CREATE OR REPLACE TABLE category_translation AS "
+                    "SELECT * FROM read_csv_auto(?, header = true)", [str(translation)])
+    else:
+        con.execute("CREATE OR REPLACE TABLE category_translation "
+                    "(product_category_name VARCHAR, product_category_name_english VARCHAR)")
     con.execute(f"""
         CREATE OR REPLACE VIEW orders_clean AS
         SELECT *

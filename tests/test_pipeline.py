@@ -119,3 +119,32 @@ def test_repeat_customer_and_90_day_cohort(con):
     cohorts = run(con, "06_cohort_retention").set_index("cohort")
     assert cohorts.loc["2017-Q1", "new_customers"] == 2
     assert cohorts.loc["2017-Q1", "returned_90d"] == 1
+
+
+def test_late_handoff_split(con):
+    # o1: handed off before the 03-03 limit, on time; o2: handed off after it, late
+    df = run(con, "07_late_handoff").set_index("seller_handoff")
+    assert df.loc["Seller handed off on time", "late_rate_pct"] == 0
+    assert df.loc["Seller missed hand-off deadline", "late_rate_pct"] == 100
+    assert df.loc["Seller missed hand-off deadline", "pct_of_all_late"] == 100
+
+
+def run_without_min_volume(con, name, having):
+    sql = (SQL / f"{name}.sql").read_text().replace(having, "HAVING COUNT(*) >= 1")
+    return con.execute(sql).df()
+
+
+def test_category_drivers_use_translation(con):
+    con.execute("INSERT INTO products (product_id, product_category_name) VALUES ('p1', 'beleza_saude')")
+    con.execute("INSERT INTO category_translation VALUES ('beleza_saude', 'health_beauty')")
+    df = run_without_min_volume(con, "08_category_drivers", "HAVING COUNT(*) >= 50")
+    row = df.set_index("category").loc["health_beauty"]
+    assert row["orders"] == 4
+    assert row["late_rate_pct"] == 50  # 1 of 2 delivered orders late
+    assert row["cancel_rate_pct"] == 25  # o4 cancelled
+
+
+def test_state_view_keeps_only_on_time_handoffs(con):
+    df = run_without_min_volume(con, "09_late_by_state", "HAVING COUNT(*) >= 500")
+    assert df["orders"].tolist() == [1]  # o2 missed its hand-off and is excluded
+    assert df["median_transit_days"].tolist() == [6]
