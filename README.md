@@ -93,7 +93,7 @@ Each seller has a hand-off deadline (`shipping_limit_date`). Splitting delivered
 
 A missed hand-off makes an order ~4× more likely to arrive late, but **72% of late orders were handed off on time**. Seller SLAs matter, but they're not the main lever.
 
-Product category doesn't explain it either ([`sql/08_category_drivers.sql`](sql/08_category_drivers.sql)). Among the 12 biggest categories, late rates sit in a narrow 5.4–8.2% band, and the biggest categories (bed/bath/table 10.6%, health/beauty 9.9% of late orders) are simply the biggest by volume. Cancellation/unavailable rates are below 1% for almost every category; the few above 1% have only 59–630 orders.
+Product category doesn't explain it either ([`sql/08_category_drivers.sql`](sql/08_category_drivers.sql)). Among the 12 biggest categories, late rates sit in a narrow 5.4–8.2% band, and the biggest categories (bed/bath/table 10.6%, health/beauty 9.9% of late orders) are simply the biggest by volume. Cancellation/unavailable rates are below 1% for almost every category; the 8 above 1% have only 59–627 orders each.
 
 Destination is what separates good from bad ([`sql/09_late_by_state.sql`](sql/09_late_by_state.sql), on-time hand-offs only):
 
