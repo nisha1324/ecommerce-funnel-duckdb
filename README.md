@@ -1,6 +1,6 @@
 # E-commerce Funnel & Delivery Analysis (DuckDB + SQL)
 
-> 🚧 **In progress.** The funnel, delivery and customer-retention analyses are done. The seller/category view is next.
+> 🚧 **In progress.** The funnel, delivery, retention and late-delivery driver analyses are done. Final recommendations are next.
 
 **Business question:** a Brazilian online marketplace takes ~100k orders. Where do orders drop out between checkout and the customer's door, how much revenue is lost there, and how much does delivery reliability cost in customer satisfaction?
 
@@ -83,6 +83,24 @@ Repeat customers are worth about **2× a one-time customer**, but only 2.15% of 
 
 Retention didn't improve as the marketplace grew. Among complete cohorts, the share of new customers who bought again within 90 days peaked at **1.52% (2017-Q3)** and slipped to **1.17% (2018-Q1)**, while new-customer volume grew 4×. The 2018-Q2 and Q3 cohorts are partial because their 90-day window runs past the end of the data.
 
+### 6. Most late orders left the seller on time: the carrier leg is the problem
+Each seller has a hand-off deadline (`shipping_limit_date`). Splitting delivered orders by whether the seller met it:
+
+| Seller hand-off | Orders | % of orders | Late rate | % of all late orders |
+|---|---:|---:|---:|---:|
+| On time | 87,622 | 91.1 | 5.4% | 72.3 |
+| Missed the deadline | 8,581 | 8.9 | 21.1% | 27.7 |
+
+A missed hand-off makes an order ~4× more likely to arrive late, but **72% of late orders were handed off on time**. Seller SLAs matter, but they're not the main lever.
+
+Product category doesn't explain it either ([`sql/08_category_drivers.sql`](sql/08_category_drivers.sql)). Among the 12 biggest categories, late rates sit in a narrow 5.4–8.2% band, and the biggest categories (bed/bath/table 10.6%, health/beauty 9.9% of late orders) are simply the biggest by volume. Cancellation/unavailable rates are below 1% for almost every category; the few above 1% have only 59–630 orders.
+
+Destination is what separates good from bad ([`sql/09_late_by_state.sql`](sql/09_late_by_state.sql), on-time hand-offs only):
+
+![Late by state](results/charts/05_late_by_state.png)
+
+São Paulo (SP), the core market, is late only 2.9% of the time. **Rio de Janeiro (RJ) is late 10.4% of the time and accounts for 26.3% of these carrier-side late orders**, more than SP's 24.2% from a third of the volume. RJ's median promise (25 days) is barely longer than Minas Gerais's (MG, 24 days, 3.4% late), so RJ's promise isn't padded for its actual delivery risk. The north-east (MA 15.0%, CE 12.8%, BA 11.2%) is worse in rate but smaller in volume.
+
 **So what (provisional):** the promise date is the lever. Late orders are a small share of volume but produce most of the 1–2★ reviews. Capacity planning before peak periods, and padding promised dates when the network is under strain, would protect ratings. The ~R$176k in "shipped but never delivered" orders points to a carrier-tracking and claims gap worth chasing. With about 98% of customers buying once, growth relies entirely on acquisition. A second-order programme (for example, a follow-up offer timed around the ~74-day gap after a good delivery) is low-hanging fruit. Even moving 90-day repeat from ~1.2% to 2.5% would roughly double the repeat segment.
 
 ## How to run
@@ -96,5 +114,4 @@ pytest                            # offline tests on a tiny fixture
 ```
 
 ## Next steps
-- Seller and category view: which sellers and categories drive late deliveries and cancellations.
 - Final recommendations with owners, and limitations.
