@@ -34,4 +34,4 @@ SELECT
 FROM orders_cat
 GROUP BY category
 HAVING COUNT(*) >= 50
-ORDER BY late_orders DESC;
+ORDER BY late_orders DESC, orders DESC, category;  -- tie-breakers keep the order stable across DuckDB versions
